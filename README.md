@@ -37,8 +37,8 @@
 #### 1. 克隆项目
 
 ```bash
-git clone https://your-repository-url
-cd project-directory
+git clone https://github.com/simafeishuo/UpstairsCount.git
+cd UpstairsProject
 ```
 
 #### 2. 安装依赖库
