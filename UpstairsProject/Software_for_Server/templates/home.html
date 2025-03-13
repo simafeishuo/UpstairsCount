@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>软件设计</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #container {
+            background: linear-gradient(to right, #f0f0f0); /* 背景渐变色 */
+            padding-bottom: 20px; /* 表格下边距 */
+        }
+        #login_box {
+            width: 40%;
+            margin: auto;
+            margin-top: 5%;
+            text-align: center;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        #distabel {
+            width: 100%;
+            margin: auto;
+            margin-top: 20px;
+            text-align: center;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-image: linear-gradient(120deg, #f093fb 0%, blue 100%);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3; /* 深蓝色 */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            overflow: hidden; /* 溢出部分隐藏 */
+            text-overflow: ellipsis; /* 溢出部分显示为省略号 */
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="login_box">
+        <div id="divv">
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>用户名</th>
+                    <th>年龄</th>
+                    <th>楼梯数</th>
+                    <th>速度(楼梯数/分)</th>
+                    <th>楼梯数（单片机）</th>
+                    <th>层数（单片机）</th>
+                    <th>单片机速度(楼梯数/分)</th>
+                </tr>
+                <tr>
+                    <th>{{ID}}</th>
+                    <th>{{user_name}}</th>
+                    <th>{{age}}</th>
+                    <th id="stairs">0</th>
+                    <th id="speed">0</th>
+                    <th id="stairs_mcu">0</th>
+                    <th id="floors_mcu">0</th>
+                    <th id="speed_mcu">0</th>
+                </tr>
+            </table>
+        </div>
+        <div id="divv">
+            <button id="enroll" onclick="suan()">显示</button>
+        </div>
+    </div>
+</div>
+<script>
+async function suan() {
+    try {
+        let lastStairsCount = 0; // 上一次的楼梯数
+        let lastMCUStairsCount = 0; // 上一次的单片机楼梯数
+        let lastUpdateTime = Date.now(); // 上一次更新的时间戳
+        let isFirstUpdate = true; // 是否是第一次更新
+
+        setInterval(async function() {
+            let response = await fetch('/suanfa', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 'user_name': '{{user_name}}' })
+            });
+            let data = await response.json();
+            let currentStairsCount = data.result; // 当前的楼梯数
+            let mcuStairsCount = data.mcu_stairs; // 单片机楼梯数
+            let mcuFloorsCount = data.mcu_floors; // 单片机层数
+
+            let currentTime = Date.now(); // 当前时间戳
+            let timeDifference = (currentTime - lastUpdateTime) / 1000; // 时间差，单位为秒
+
+            // 如果时间差大于等于6秒，且是第一次更新，则将速度设置为0
+            if (timeDifference >= 6 && isFirstUpdate) {
+                document.getElementById('speed').innerHTML = "0"; // 将速度设为0
+                document.getElementById('speed_mcu').innerHTML = "0"; // 将单片机速度设为0
+                isFirstUpdate = false; // 将标志设为false，表示已经不是第一次更新
+            }
+
+            // 如果时间差大于等于5秒，更新速度
+            if (timeDifference >= 5) {
+                let stairsChange = currentStairsCount - lastStairsCount; // 变化的楼梯数
+                let mcuStairsChange = mcuStairsCount - lastMCUStairsCount; // 变化的单片机楼梯数
+
+                if (isFirstUpdate) {
+                    stairsChange = 0;
+                    mcuStairsChange = 0;
+                    isFirstUpdate = false;
+                }
+
+                let speed = stairsChange * 12; // 计算速度
+                let mcuSpeed = mcuStairsChange * 12; // 计算单片机速度
+
+                document.getElementById('speed').innerHTML = speed.toFixed(0); // 更新速度，保留整数
+                document.getElementById('speed_mcu').innerHTML = mcuSpeed.toFixed(0); // 更新单片机速度，保留整数
+
+                lastStairsCount = currentStairsCount; // 更新上一次的楼梯数
+                lastMCUStairsCount = mcuStairsCount; // 更新上一次的单片机楼梯数
+                lastUpdateTime = currentTime; // 更新上一次更新的时间戳
+            }
+
+            // 更新楼梯数和单片机数据
+            document.getElementById('stairs').innerHTML = currentStairsCount;
+            document.getElementById('stairs_mcu').innerHTML = mcuStairsCount;
+            document.getElementById('floors_mcu').innerHTML = mcuFloorsCount;
+        }, 50); // 每0.05秒更新一次数据
+    } catch (error) {
+        console.error(error);
+    }
+}
+</script>
+</body>
+</html>

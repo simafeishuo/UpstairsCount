@@ -1,0 +1,101 @@
+<!--register-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册</title>
+    <style>
+        body {
+            background: url(img.jpg);
+            background-size: 100% auto;
+        }
+
+        #register_box {
+            width: 20%;
+            height: 400px;
+            background-color: #f0f8ff;
+            opacity: 0.6;
+            margin: auto;   <!--设置居中-->
+            margin-top: 10%;
+            text-align: center;
+            border-radius: 10px; <!--设置边框为圆角，半径10px-->
+            padding: 50px 50px;    <!--上下50像素，左右50像素-->
+        }
+
+        #register_box input,
+        #register_box button {
+            outline: none;
+        }
+
+        #register_box #form #input_box {
+            margin-top: 5%;
+        }
+        #register_box #form #input_box input,select{
+            border: 0;
+            width: 50%;
+            font-size: 15px;
+            background: #ffffff00;
+            border-bottom: 2px solid #ffffff;
+            padding: 5px 10px;
+            margin-top: 10px;
+        }
+        table{
+            width: 100%;
+        }
+        td{
+            text-align: left;
+        }
+        #register_box button {
+            margin-top: 50px;
+            width: 50%;
+            height: 30px;
+            border-radius: 10px;
+            border: 0;
+            color: #fff;
+            font-size: 15px;
+            background-image: linear-gradient(120deg, #f093fb 0%, blue 100%);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+ <div id="register_box">
+     <h1>注册</h1>
+     <div id="form">
+         <form action="http://localhost:5000" method="POST">
+           <div id="input_box">
+            <table>
+                <tr>
+                    <td>用户：</td>
+                    <td><input type="text"  name="username" style="color:black" placeholder="请输入用户名" required></td>
+                </tr>
+                <tr>
+                    <td>密码：</td>
+                    <td><input type="password" name="mima" style="color:black" placeholder="请输入密码" required></td>
+                </tr>
+                <tr>
+                    <td>年龄：</td>
+                    <td><input type="number" name="age" style="color:black" placeholder="请输入年龄" required></td>
+                </tr>
+                <tr>
+                    <td>性别：</td>
+                    <td><select class="none" name="sex">
+                        <option value="none" selected disabled hidden>请选择性别</option>
+                        <option value="man">男</option>
+                        <option value="woman">女</option></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>tel：</td>
+                    <td><input type="text" name="tel" style="color:black" placeholder="请输入电话" required></td>
+                </tr>
+            </table>
+              <button id="enroll" type="submit">注册</button>
+         </form>
+     </div>
+
+ </div>
+
+</body>
+</html>

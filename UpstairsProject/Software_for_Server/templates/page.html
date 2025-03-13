@@ -1,0 +1,39 @@
+<!--page-->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Error</title>
+	<style>
+		body{
+			background-color: #f1f1f1;
+			margin: 0;
+		}
+#di{
+    width: 40%;
+    height: 400px;
+    margin: auto;
+    margin-top: 10%;
+    text-align: center;
+    border-radius: 10px;
+    padding: 50px 50px; 
+}	
+	</style>
+</head>
+<body>
+<div  id="di">
+	<h1>404</h1>
+	<p>
+		<strong>Incorrect account number or password.</strong>
+	</p>
+	<button id="enroll" onclick="showAlert()">返回</button>
+</div>
+	<script>
+		function showAlert() {
+			var result = confirm("确定要离开此页面吗？");
+			if (result) {
+				window.location.href = "http://localhost:5000";
+			}
+		}
+	</script>
+</body>
+</html>
